@@ -5,23 +5,32 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     public float speed;
+    bool turning;
 
     private void Update()
     {
         transform.position += transform.forward * speed * Time.deltaTime;
 
-        if(Input.GetKey(KeyCode.A))
+        if(Input.GetKey(KeyCode.A) && !turning)
         {
-            Quaternion newRoataion = Quaternion.Euler(Vector3.up * -90);
-            newRoataion = Quaternion.LookRotation(transform.forward);
-            transform.rotation = newRoataion;
+            turning = true;
+            transform.eulerAngles -= new Vector3(0, 90, 0);
+
+            StartCoroutine(WaitForFrame());
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && !turning)
         {
-            Quaternion newRoataion = Quaternion.Euler(Vector3.up * 90);
-            newRoataion = Quaternion.LookRotation(transform.forward);
-            transform.rotation = newRoataion;
+            turning = true;
+            transform.eulerAngles += new Vector3(0, 90, 0);
+
+            StartCoroutine(WaitForFrame());
         }
+    }
+
+    IEnumerator WaitForFrame()
+    {
+        yield return new WaitForSeconds(.25f);
+        turning = false;
     }
 }
